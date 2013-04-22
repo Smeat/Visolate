@@ -21,6 +21,7 @@
 package visolate;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.*;
@@ -99,6 +100,23 @@ public class Main extends JApplet {
             System.err.println("Error: Too many arguments.");
             System.exit(1);
     }
+    
+    try {
+		UIManager.setLookAndFeel(
+		        UIManager.getSystemLookAndFeelClassName());
+	} catch (ClassNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (InstantiationException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (IllegalAccessException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} catch (UnsupportedLookAndFeelException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
   
     final JFrame frame = new JFrame(APPNAME);
 

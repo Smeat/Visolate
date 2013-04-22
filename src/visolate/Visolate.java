@@ -638,12 +638,15 @@ public class Visolate extends JPanel implements SimulatorUI {
 			if (currentFile != null)
 				dir = (currentFile.getParent()).toString();
 
-			JFileChooser chooser = new JFileChooser(dir);
+			
+			FileDialog chooser = new FileDialog(new Frame(), "Datei öffnen", FileDialog.LOAD);
+			
+			chooser.setVisible(true);
 
-			//chooser.setFileFilter(fileFilter);
 
-			if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-				return chooser.getSelectedFile();
+			File file = new File(chooser.getDirectory() + chooser.getFile());
+			if(file.isFile())
+				return file;
 			else
 				return null;
 
