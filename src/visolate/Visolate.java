@@ -639,18 +639,22 @@ public class Visolate extends JPanel implements SimulatorUI {
 				dir = (currentFile.getParent()).toString();
 
 			
-			FileDialog chooser = new FileDialog(new Frame(), "Datei öffnen", FileDialog.LOAD);
-			
+			FileDialog chooser = new FileDialog(new Frame(), "Open File", FileDialog.LOAD);
+			//TODO: add file filters
 			chooser.setVisible(true);
 
 
-			File file = new File(chooser.getDirectory() + chooser.getFile());
+			File file = new File(chooser.getDirectory() + chooser.getFile()); //FIXME: NPE if selecting recent files (Ubuntu)
 			if(file.isFile())
 				return file;
 			else
 				return null;
 
 		} catch (AccessControlException e1) {
+			accessControlError();
+			return null;
+		}
+		catch (Exception e) {
 			accessControlError();
 			return null;
 		}

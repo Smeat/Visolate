@@ -103,7 +103,7 @@ public class Main extends JApplet {
     
     try {
 		UIManager.setLookAndFeel(
-		        UIManager.getSystemLookAndFeelClassName());
+		        UIManager.getSystemLookAndFeelClassName()); //TODO: Make look and feel options
 	} catch (ClassNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
