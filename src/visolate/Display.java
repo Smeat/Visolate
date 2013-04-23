@@ -233,6 +233,15 @@ public class Display extends JPanel {
           enableZoom(enableZoomButton.isSelected());
         } });
     navControlsBox.add(enableZoomButton);
+    
+    enableZoomInvert = new JCheckBox("invert zoom");
+    enableZoomInvert.setBackground(Color.WHITE);
+    enableZoomInvert.setSelected(zoomInvert);
+    enableZoomInvert.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          enableZoomInvert(enableZoomInvert.isSelected());
+        } });
+    navControlsBox.add(enableZoomInvert);
 
     enableTiltButton = new JCheckBox("tilt [ctl]");
     enableTiltButton.setBackground(Color.WHITE);
@@ -631,6 +640,7 @@ public class Display extends JPanel {
     enablePanButton.setEnabled(true);
     enableTiltButton.setEnabled(true);
     enableZoomButton.setEnabled(true);
+    enableZoomInvert.setEnabled(true);
     nativeDPIField.setEnabled(true);
     nativeDPILabel.setEnabled(true);
 
@@ -669,6 +679,7 @@ public class Display extends JPanel {
     enablePanButton.setEnabled(enable);
     enableTiltButton.setEnabled(enable);
     enableZoomButton.setEnabled(enable);
+    enableZoomInvert.setEnabled(enable);
     nativeDPIField.setEnabled(enable);
     nativeDPILabel.setEnabled(enable);
   }
@@ -682,12 +693,17 @@ public class Display extends JPanel {
       return;
     
     zoomEnabled = enable;
+    enableZoomInvert.setEnabled(enable);
 
     fitButton.setEnabled(enable);
     oneToOneButton.setEnabled(enable);
     dpiLabel.setEnabled(enable);
     dpiField.setEnabled(enable);
     dpiSlider.setEnabled(enable);
+  }
+  
+  private void enableZoomInvert(boolean enable) {
+	  zoomInvert = enable;
   }
 
   private void enablePan(boolean enable) {
@@ -943,7 +959,7 @@ public class Display extends JPanel {
       
       addMouseWheelListener(new MouseWheelListener() {
           public void mouseWheelMoved(MouseWheelEvent e) {
-            updateZoom(e.getWheelRotation(), e.isShiftDown());
+            updateZoom(e.getWheelRotation() * (zoomInvert ? -1 : 1), e.isShiftDown());
           } });
       
       addKeyListener(new KeyAdapter() {
@@ -1222,14 +1238,17 @@ public class Display extends JPanel {
   private int columnWidth;
 
   private JCheckBox enableZoomButton;
+  private JCheckBox enableZoomInvert;
   private JCheckBox enableTiltButton;
   private JCheckBox enablePanButton;
 
   private boolean zoomEnabled = true;
+  private boolean zoomInvert = false;
   private boolean panEnabled = true;
   private boolean tiltEnabled = true;
 
   private boolean zoomWasEnabled = true;
+  private boolean zoomWasInverted = true;
   private boolean tiltWasEnabled = true;
   private boolean panWasEnabled = true;
 
