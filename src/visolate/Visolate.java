@@ -33,6 +33,7 @@ import java.util.List;
 import java.net.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -629,36 +630,54 @@ public class Visolate extends JPanel implements SimulatorUI {
 
 		startProcess(myToolpathsProcessor);
 	}
+	
+	private File browse() {		
+		try{
+	        File input = null;
+	        String[] zenity = {"zenity", "--file-selection", "--title=Open", "--file-filter=Gerber file | *.gbr", "--file-filter=All | * "}; //FIXME: dirty workaround to get a fully functional and native file dialog on linux
+	        String filestring;
+	            try {
+	                Process p = Runtime.getRuntime().exec(zenity);  
+	                BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));  
+	                StringBuffer sb = new StringBuffer();  
+	
+	                sb.append(br.readLine());
+	                filestring = sb.toString();  
+	                if (filestring.equals("null")) {
+	                    return null;
+	                }
+	                input = new File(filestring);
 
-	private File browse() {
-
-		try {
-
-			String dir = System.getProperty("user.dir");
-			if (currentFile != null)
-				dir = (currentFile.getParent()).toString();
-
-			
-			FileDialog chooser = new FileDialog(new Frame(), "Open File", FileDialog.LOAD);
-			//TODO: add file filters
-			chooser.setVisible(true);
-
-
-			File file = new File(chooser.getDirectory() + chooser.getFile()); //FIXME: NPE if selecting recent files (Ubuntu)
-			if(file.isFile())
-				return file;
-			else
-				return null;
-
-		} catch (AccessControlException e1) {
-			accessControlError();
-			return null;
+	            } 
+	            catch (IOException e1) { //fallback if zenity is not installed
+		            final JFileChooser fc = new JFileChooser();
+		            fc.addChoosableFileFilter(new FileFilter() {
+						
+						@Override
+						public String getDescription() {
+							return "Gerber file";
+						}
+						
+						@Override
+						public boolean accept(File f) {
+							return f.getName().endsWith(".gbr");
+						}
+					});
+		            
+		            int returnVal = -1;
+		            
+		            returnVal = fc.showOpenDialog(fc);  
+		            if (returnVal == JFileChooser.APPROVE_OPTION) {
+		                input = fc.getSelectedFile();
+		            }
+	            }
+	            return input;
 		}
-		catch (Exception e) {
-			accessControlError();
-			return null;
+	    catch (AccessControlException e1) {
+	    	accessControlError();
+		return null; 
 		}
-	}
+    }
 
 	private void accessControlError() {
 		JOptionPane.
