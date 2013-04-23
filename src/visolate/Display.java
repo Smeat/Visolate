@@ -1248,7 +1248,6 @@ public class Display extends JPanel {
   private boolean tiltEnabled = true;
 
   private boolean zoomWasEnabled = true;
-  private boolean zoomWasInverted = true;
   private boolean tiltWasEnabled = true;
   private boolean panWasEnabled = true;
 
